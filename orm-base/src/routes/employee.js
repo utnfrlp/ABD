@@ -5,6 +5,7 @@ const sequelizeInstance = require('../sequelizeInstance')
 const Employee = sequelizeInstance.models.Employee
 const Department = sequelizeInstance.models.Department
 
+// Get all employees
 router.get('/', function(req, res) {
   Employee.findAll({
     limit: 30
@@ -17,6 +18,7 @@ router.get('/', function(req, res) {
   })
 })
 
+// Get :id employee
 router.get('/:id', function(req, res) {
   const id = req.params.id;
   
@@ -31,6 +33,7 @@ router.get('/:id', function(req, res) {
   })
 })
 
+// Get :id employee with its departments
 router.get('/:id/departments', function(req, res) {
   const id = req.params.id;
   
@@ -49,6 +52,7 @@ router.get('/:id/departments', function(req, res) {
   })
 })
 
+// Create a new employee
 router.post('/', function(req, res) {
   const body = req.body;
   
@@ -61,6 +65,10 @@ router.post('/', function(req, res) {
   })
 })
 
+// Update an employee
+// TODO
 
+// Delete an employee
+// TODO
 
 module.exports = router;
