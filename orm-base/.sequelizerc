@@ -4,7 +4,5 @@ const path = require('path');
 
 module.exports = {
   config: path.join(__dirname, 'src/sequelizeInstance/config.json'),
-  'models-path': path.join(__dirname, 'src/sequelizeInstance/models'),
-  'migrations-path': path.join(__dirname, 'src/sequelizeInstance/migrations'),
-  'seeders-path': path.join(__dirname, 'src/sequelizeInstance/seeders'),
+  'models-path': path.join(__dirname, 'src/sequelizeInstance/models')
 };

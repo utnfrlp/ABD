@@ -5,10 +5,10 @@ const sequelizeInstance = require('../sequelizeInstance')
 const Employee = sequelizeInstance.models.Employee
 const Department = sequelizeInstance.models.Department
 
-// Get all employees
+// Responde con el listado de empleados
 router.get('/', function(req, res) {
   Employee.findAll({
-    limit: 30
+    limit: 30 // opcional
   })
   .then(function(results) {
     res.status(200).json({ results })
@@ -18,12 +18,12 @@ router.get('/', function(req, res) {
   })
 })
 
-// Get :id employee
-router.get('/:id', function(req, res) {
-  const id = req.params.id;
+// Responde con el empleado de "emp_no" enviado como parámetro
+router.get('/:emp_no', function(req, res) {
+  const emp_no = req.params.emp_no;
   
   Employee.findAll({
-    where: { emp_no: id }
+    where: { emp_no: emp_no }
   })
   .then(function(results) {
     res.status(200).json({ results })
@@ -33,15 +33,18 @@ router.get('/:id', function(req, res) {
   })
 })
 
-// Get :id employee with its departments
-router.get('/:id/departments', function(req, res) {
-  const id = req.params.id;
+// Responde con el empleado de "emp_no" enviado como parámetro,
+// y los departamentos a los que pertenece.
+// También trae información de la tabla intermedia "DeptEmp"
+router.get('/:emp_no/departments', function(req, res) {
+  const emp_no = req.params.emp_no;
   
   Employee.findAll({
-    where: { emp_no: id },
+    where: { emp_no: emp_no },
     include: [{
       model: Department,
-      through: {attributes: []}
+      // para traer sólo ciertos atributos de la tabla intermedia se utiliza el atributo 'through'
+      // through: {attributes: ['from_date']}
     }]
   })
   .then(function(results) {
@@ -52,7 +55,7 @@ router.get('/:id/departments', function(req, res) {
   })
 })
 
-// Create a new employee
+// Crea un nuevo empleado
 router.post('/', function(req, res) {
   const body = req.body;
   
@@ -65,10 +68,35 @@ router.post('/', function(req, res) {
   })
 })
 
-// Update an employee
-// TODO
+// Actualiza un empleado existente
+router.put('/', function(req, res) {
+  const body = req.body;
+  const emp_no = body.emp_no;
 
-// Delete an employee
-// TODO
+  Employee.update(body, {
+    where: { emp_no: emp_no }
+  })
+  .then(function(results) {
+    res.status(200).json({ results })
+  })
+  .catch(function(err) {
+    res.status(500).json(err)
+  })
+})
+
+// Elimina el empleado de "emp_no" enviado como parámetro
+router.delete('/:emp_no', function(req, res) {
+  const emp_no = req.params.emp_no;
+  
+  Employee.destroy({
+    where: { emp_no: emp_no }
+  })
+  .then(function(results) {
+    res.status(200).json({ results })
+  })
+  .catch(function(err) {
+    res.status(500).json(err)
+  })
+})
 
 module.exports = router;

@@ -5,10 +5,10 @@ const sequelizeInstance = require('../sequelizeInstance')
 const Department = sequelizeInstance.models.Department
 const Employee = sequelizeInstance.models.Employee
 
-// Get all employees
+// Responde con el listado de departamentos
 router.get('/', function(req, res) {
   Department.findAll({
-    limit: 30
+    limit: 30 // opcional
   })
   .then(function(results) {
     res.status(200).json({ results })
@@ -18,12 +18,12 @@ router.get('/', function(req, res) {
   })
 })
 
-// Get :id department
-router.get('/:id', function(req, res) {
-  const id = req.params.id;
+// Responde con el departamento de "dept_no" enviado como parámetro
+router.get('/:dept_no', function(req, res) {
+  const dept_no = req.params.dept_no;
   
   Department.findAll({
-    where: { dept_no: id }
+    where: { dept_no: dept_no }
   })
   .then(function(results) {
     res.status(200).json({ results })
@@ -33,15 +33,18 @@ router.get('/:id', function(req, res) {
   })
 })
 
-// Get :id department with its employees
-router.get('/:id/employees', function(req, res) {
-  const id = req.params.id;
+// Responde con el departamento de "dept_no" enviado como parámetro,
+// y los empleados pertenecientes a dicho departamento.
+// También trae información de la tabla intermedia "DeptEmp"
+router.get('/:dept_no/employees', function(req, res) {
+  const dept_no = req.params.dept_no;
   
   Department.findAll({
-    where: { dept_no: id },
+    where: { dept_no: dept_no },
     include: [{
       model: Employee,
-      through: {attributes: []}
+      // para traer sólo ciertos atributos de la tabla intermedia se utiliza el atributo 'through'
+      // through: {attributes: ['from_date']}
     }]
   })
   .then(function(results) {
@@ -52,13 +55,48 @@ router.get('/:id/employees', function(req, res) {
   })
 })
 
-// Create a new department
-// TODO
+// Crea un nuevo departamento
+router.post('/', function(req, res) {
+  const body = req.body;
+  
+  Department.create(body)
+  .then(function(results) {
+    res.status(200).json({ results })
+  })
+  .catch(function(err) {
+    res.status(500).json(err)
+  })
+})
 
-// Update a department
-// TODO
+// Actualiza un departamento existente
+router.put('/', function(req, res) {
+  const body = req.body;
+  const dept_no = body.dept_no;
+  
+  Department.update(body, {
+    where: { dept_no: dept_no }
+  })
+  .then(function(results) {
+    res.status(200).json({ results })
+  })
+  .catch(function(err) {
+    res.status(500).json(err)
+  })
+})
 
-// Delete a department
-// TODO
+// Elimina el departamento de "dept_no" enviado como parámetro
+router.delete('/:dept_no', function(req, res) {
+  const dept_no = req.params.dept_no;
+  
+  Department.destroy({
+    where: { dept_no: dept_no }
+  })
+  .then(function(results) {
+    res.status(200).json({ results })
+  })
+  .catch(function(err) {
+    res.status(500).json(err)
+  })
+})
 
 module.exports = router;

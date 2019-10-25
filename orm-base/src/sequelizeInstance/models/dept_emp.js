@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = function(sequelize, type) {
+  // creación de modelo departamento-empleado
   const DeptEmp = sequelize.define('DeptEmp', {
     emp_no: { type: type.INTEGER(11), allowNull: false, primaryKey: true },
     dept_no: { type: type.CHAR(4), allowNull: false, primaryKey: true },

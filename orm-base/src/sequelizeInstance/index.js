@@ -11,12 +11,12 @@ const sequelize = new Sequelize(
   }
 )
 
-// Import models
+// Importación de modelos
 const DepartmentModel = require('./models/department')(sequelize, Sequelize.DataTypes)
 const EmployeeModel = require('./models/employee')(sequelize, Sequelize.DataTypes)
 const DeptEmpModel = require('./models/dept_emp')(sequelize, Sequelize.DataTypes)
 
-// Associations
+// Asociaciones entre modelos
 DepartmentModel.belongsToMany(EmployeeModel, {
   through: DeptEmpModel, foreignKey: 'dept_no'
 });
